@@ -1,0 +1,71 @@
+<html>
+<head>
+<style>
+.done{
+        text-decoration: line-through;
+}
+
+.remove{
+        display:none;
+}
+</style>
+</head>
+
+
+<body>
+
+<div ng-app="todo">
+  <div ng-controller="todoController">
+    <form ng-submit="todoAdd()">
+      <input type="text" placeholder=""  ng-model="todoItem" />
+      <input type="submit" value="Add" />
+    </form>
+
+    <div ng-repeat="item in todoList" id="index" ng-class="crossed($index)">
+        <button ng-click="todoDone($index)">Done</button>
+        <button ng-click="remove($index)">Remove</button>
+        <span>{{ item.text|filter:visible}}</span>      
+    </div>
+    
+  </div> <!-- end of controller div -->
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js"></script>
+<script>
+var app = angular.module('todo',[]);
+
+app.controller('todoController', function($scope){
+                <!-- example item -->
+                $scope.todoList =[{text:"Brush teeth", done:false, visible:true}];
+                <!-- function to add item to list -->
+                $scope.todoAdd = function(){
+                    $scope.todoList.push({text:$scope.todoItem, done:false, visible:true})      
+                    $scope.todoItem="";
+                }
+                $scope.toggle=false;
+                $scope.changeToggle=function(){
+                    $scope.toggle = !$scope.toggle;
+                    }
+                <!-- function to cross out when done -->
+                $scope.todoDone = function(item) {
+                        $scope.todoList[item]["done"] = !$scope.todoList[item]["done"];
+                    }
+
+                $scope.remove = function(item) {
+                    $scope.todoList[item]["visible"] = !$scope.todoList[item]["visible"];
+                };
+                $scope.crossed = function(item) {
+                        
+                     if ($scope.todoList[item]["done"]){
+                        if($scope.todoList[item]["visible"])     
+                            return "done";
+                        else if(!$scope.todoList[item]["visible"])
+                            return "remove";}
+                     else if(!$scope.todoList[item]["visible"])
+                                return "remove";
+                }
+});
+
+
+</script>
+</body>
+</html>
